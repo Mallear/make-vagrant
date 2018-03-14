@@ -24,7 +24,7 @@ $ pipenv run -- python make-vagrant.py --help
 
 ## Usage
 
-```shell
+```
 Usage: make-vagrant.py [OPTIONS]
 
   Simple process to create Vagrant file from given distribution
