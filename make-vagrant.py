@@ -2,6 +2,8 @@
 import click
 from jinja2 import Template
 
+
+# List of box ordered by distribution
 vagrantbox = {
     'amazonlinux2': {
         'name': 'moonphase/amazonlinux2',
@@ -17,6 +19,8 @@ vagrantbox = {
     }
 }
 
+
+# Vagrant file template
 vagrantfile = Template(
 '''Vagrant.configure('2') do | config |
 
@@ -33,10 +37,8 @@ vagrantfile = Template(
             # ansible.verbose = 'vvv'
             ansible.playbook='playbook.yml'
         end
-{% endif %}
-{% for machine_port, host_port in forwarded_port.items() %}
-        anchore.vm.network :forwarded_port, guest: {{ machine_port }}, host: {{ host_port }}
-{% endfor %}
+{% endif %}{% for machine_port, host_port in forwarded_port.items() %}
+        anchore.vm.network :forwarded_port, guest: {{ machine_port }}, host: {{ host_port }}{% endfor %}
     end
 end'''
 )
@@ -46,28 +48,26 @@ def ports_filter(forwarded_ports):
     machine_port = []
     host_port = []
     for port in forwarded_ports:
-        link = port.split(":")
-        print(link)
-        machine_port = link[0]
-        host_port = link[1]
+        link = port.split(':')
+        machine_port.append(link[0])
+        host_port.append(link[1])
 
-    port_link = dict(zip([machine_port], [host_port]))
-    print(port_link)
+    port_link = dict(zip(machine_port, host_port))
     return port_link
 
 
 @click.command()
 @click.option('-d', '--distrib', help='Box distribution')
-@click.option('-p', '--port', help='Ports to forward')
-@click.option('--provider', help='Prodiver')
+@click.option('-p', '--port', help='Ports to forward', multiple=True)
+@click.option('--provider', help='Provider')
 @click.option('-m', '--memory', type=int, help='Custom VM memory')
 @click.option('-c', '--cpu', type=int, help='Custom VM CPU')
 def init(distrib, port, provider, cpu, memory):
-    '''Simple process to create Vagrant file from given distrib'''
+    '''Simple process to create Vagrant file from given distribution'''
 
     template_context = {
         'vagrantbox': vagrantbox[distrib],
-        'forwarded_port': ports_filter([port]),
+        'forwarded_port': ports_filter(list(port)),
         'cpu': cpu,
         'memory': memory
     }
