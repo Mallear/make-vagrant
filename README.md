@@ -29,11 +29,14 @@ Usage: make-vagrant.py [OPTIONS]
   Simple process to create Vagrant file from given distribution
 
 Options:
-  -d, --distrib TEXT    Box distribution
-  -p, --port TEXT       Ports to forward - machine:host format
-  --provider TEXT       Provider
-  -m, --memory INTEGER  Custom VM memory
+  -b, --box TEXT        Vagrant box name
   -c, --cpu INTEGER     Custom VM CPU
+  -d, --distrib TEXT    Box configuration from configuration dictionnary -
+                        Used only if box parameter is not set
+  -m, --memory INTEGER  Custom VM memory
+  -p, --port TEXT       Ports to forward - machine:host format
+  -v, --version TEXT    Vagrant box version
+  --provision TEXT      Vagrant provisionner
   --help                Show this message and exit.
 ```
 

@@ -25,9 +25,10 @@ vagrantfile = Template(
 '''Vagrant.configure('2') do | config |
 
     config.vm.define 'default' do | anchore |
-        anchore.vm.box='{{ vagrantbox.name }}'
-        anchore.vm.box_version='{{ vagrantbox.version }}'
-
+        anchore.vm.box='{{ vagrantbox_name }}'
+{% if vagrantbox_version %}
+        anchore.vm.box_version='{{ vagrantbox_version }}'
+{% endif %}
         anchore.vm.provider 'virtualbox' do | v |
             v.memory={% if memory %}{{ memory }}{% else %}4096{% endif %}
             v.cpus={% if cpu %}{{ cpu }}{% else %}2{% endif %}
@@ -57,16 +58,19 @@ def ports_filter(forwarded_ports):
 
 
 @click.command()
-@click.option('-d', '--distrib', help='Box distribution')
-@click.option('-p', '--port', help='Ports to forward - machine:host format', multiple=True)
-@click.option('--provider', help='Provider')
-@click.option('-m', '--memory', type=int, help='Custom VM memory')
+@click.option('-b', '--box', type=str, help='Vagrant box name')
 @click.option('-c', '--cpu', type=int, help='Custom VM CPU')
-def init(distrib, port, provider, cpu, memory):
+@click.option('-d', '--distrib', help='Box configuration from configuration dictionnary - Used only if box parameter is not set')
+@click.option('-m', '--memory', type=int, help='Custom VM memory')
+@click.option('-p', '--port', help='Ports to forward - machine:host format', multiple=True)
+@click.option('-v', '--version', help='Vagrant box version')
+@click.option('--provision', help='Vagrant provisionner')
+def init(box, distrib, port, provision, cpu, memory, version):
     '''Simple process to create Vagrant file from given distribution'''
 
     template_context = {
-        'vagrantbox': vagrantbox[distrib],
+        'vagrantbox_name': box if box else vagrantbox[distrib],
+        'vagrantbox_version': version if box else vagrantbox[distrib],
         'forwarded_port': ports_filter(list(port)),
         'cpu': cpu,
         'memory': memory
