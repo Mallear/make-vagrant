@@ -26,15 +26,21 @@ $ pipenv run -- python make-vagrant.py --help
 ```shell
 Usage: make-vagrant.py [OPTIONS]
 
-  Simple process to create Vagrant file from given distrib
+  Simple process to create Vagrant file from given distribution
 
 Options:
   -d, --distrib TEXT    Box distribution
-  -p, --port INTEGER    Ports to forward
-  --provider TEXT       Prodiver
+  -p, --port TEXT       Ports to forward - machine:host format
+  --provider TEXT       Provider
   -m, --memory INTEGER  Custom VM memory
   -c, --cpu INTEGER     Custom VM CPU
   --help                Show this message and exit.
+```
+
+To forward multiple ports:
+
+```shell
+$ python make-vagrant.py -d debian8 -p 80:8080 -p 6060:6060
 ```
 
 ## Available distributions

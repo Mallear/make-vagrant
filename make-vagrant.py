@@ -58,7 +58,7 @@ def ports_filter(forwarded_ports):
 
 @click.command()
 @click.option('-d', '--distrib', help='Box distribution')
-@click.option('-p', '--port', help='Ports to forward', multiple=True)
+@click.option('-p', '--port', help='Ports to forward - machine:host format', multiple=True)
 @click.option('--provider', help='Provider')
 @click.option('-m', '--memory', type=int, help='Custom VM memory')
 @click.option('-c', '--cpu', type=int, help='Custom VM CPU')
