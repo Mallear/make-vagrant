@@ -3,6 +3,7 @@ Make-Vagrant
 
 ## Requirements
 
+* Python3
 * click
 * Jinja2
 
@@ -48,12 +49,3 @@ $ python make-vagrant.py -d debian8 -p 80:8080 -p 6060:6060
 ```
 
 Shell script will always be applied before Ansible playbook during provisionning. Update the resulting Vagrantfile to inverse this behavior if needed.
-
-## Available distributions
-
-* Amazon Linux 2
-    * Version 2017.12.0.20171212.2
-* Centos 7
-    * Version 1802.01
-* Debian 8
-    * Version 8.10.0
