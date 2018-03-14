@@ -36,3 +36,12 @@ Options:
   -c, --cpu INTEGER     Custom VM CPU
   --help                Show this message and exit.
 ```
+
+## Available distributions
+
+* Amazon Linux 2
+    * Version 2017.12.0.20171212.2
+* Centos 7
+    * Version 1802.01
+* Debian 8
+    * Version 8.10.0

@@ -34,16 +34,31 @@ vagrantfile = Template(
             ansible.playbook='playbook.yml'
         end
 {% endif %}
-{% for port in forwarded_port %}
-        anchore.vm.network :forwarded_port, guest: {{ port }}, host: {{ port }}
+{% for machine_port, host_port in forwarded_port.items() %}
+        anchore.vm.network :forwarded_port, guest: {{ machine_port }}, host: {{ host_port }}
 {% endfor %}
     end
 end'''
 )
 
+
+def ports_filter(forwarded_ports):
+    machine_port = []
+    host_port = []
+    for port in forwarded_ports:
+        link = port.split(":")
+        print(link)
+        machine_port = link[0]
+        host_port = link[1]
+
+    port_link = dict(zip([machine_port], [host_port]))
+    print(port_link)
+    return port_link
+
+
 @click.command()
 @click.option('-d', '--distrib', help='Box distribution')
-@click.option('-p', '--port', type=int, help='Ports to forward')
+@click.option('-p', '--port', help='Ports to forward')
 @click.option('--provider', help='Prodiver')
 @click.option('-m', '--memory', type=int, help='Custom VM memory')
 @click.option('-c', '--cpu', type=int, help='Custom VM CPU')
@@ -52,7 +67,7 @@ def init(distrib, port, provider, cpu, memory):
 
     template_context = {
         'vagrantbox': vagrantbox[distrib],
-        'forwarded_port': [port],
+        'forwarded_port': ports_filter([port]),
         'cpu': cpu,
         'memory': memory
     }
