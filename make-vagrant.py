@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import click
+import textwrap
 from jinja2 import Template
 
 
@@ -21,31 +22,31 @@ vagrantbox = {
 
 
 # Vagrant file template
-vagrantfile = Template(
-'''Vagrant.configure('2') do | config |
+vagrantfile = Template(textwrap.dedent(
+    '''Vagrant.configure('2') do | config |
 
     config.vm.define 'default' do | default |
         default.vm.box='{{ vagrantbox_name }}'
-{% if vagrantbox_version %}
+        {% if vagrantbox_version %}
         default.vm.box_version='{{ vagrantbox_version }}'
-{% endif %}
+        {% endif %}
         default.vm.provider 'virtualbox' do | v |
             v.memory={{ memory }}
             v.cpus={{ cpu }}
         end
-{% if shell_script %}
+        {% if shell_script %}
         default.vm.provision "shell", path: '{{shell_script}}'
-{% endif %}
-{% if ansible_playbook %}
+        {% endif %}
+        {% if ansible_playbook %}
         default.vm.provision 'it', type: 'ansible' do | ansible |
             # ansible.verbose = 'vvv'
             ansible.playbook='{{ ansible_playbook }}'
         end
-{% endif %}{% for machine_port, host_port in forwarded_port.items() %}
+        {% endif %}{% for machine_port, host_port in forwarded_port.items() %}
         default.vm.network :forwarded_port, guest: {{ machine_port }}, host: {{ host_port }}{% endfor %}
     end
 end'''
-)
+))
 
 
 def ports_filter(forwarded_ports):
